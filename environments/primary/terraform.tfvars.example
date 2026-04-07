@@ -1,0 +1,50 @@
+# environments/primary/terraform.tfvars.example
+# Copy to terraform.tfvars and fill in your values.
+# Never commit terraform.tfvars to source control — add it to .gitignore.
+
+app_name       = "myapp"
+aws_account_id = "123456789012"
+owner_tag      = "platform-team"
+
+primary_region = "us-east-1"
+dr_region      = "eu-west-1"
+
+# Networking
+primary_vpc_cidr = "10.0.0.0/16"
+primary_azs      = ["us-east-1a", "us-east-1b"]
+app_port         = 8080
+
+# Domain (must be an existing Route 53 hosted zone)
+domain_name                  = "example.com"
+primary_acm_certificate_arn  = "arn:aws:acm:us-east-1:123456789012:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+health_check_path            = "/health"
+
+# Compute
+container_image   = "123456789012.dkr.ecr.us-east-1.amazonaws.com/myapp:latest"
+task_cpu          = 512
+task_memory       = 1024
+ecs_desired_count = 2
+ecs_min_capacity  = 2
+ecs_max_capacity  = 20
+
+# Database — use environment variables or AWS Secrets Manager in production
+# export TF_VAR_db_master_password="your-secure-password"
+# export TF_VAR_redis_auth_token="your-redis-token"
+database_name                 = "appdb"
+db_master_username            = "dbadmin"
+aurora_engine_version         = "15.4"
+primary_aurora_min_acu        = 0.5
+primary_aurora_max_acu        = 16.0
+primary_aurora_instance_count = 2
+backup_retention_days         = 7
+deletion_protection           = true
+
+primary_redis_node_type    = "cache.t3.small"
+primary_redis_num_replicas = 2
+
+# Storage
+elb_service_account_id = "127311923021"  # us-east-1
+
+# Alerting
+alert_emails       = ["oncall@example.com", "platform-team@example.com"]
+pagerduty_endpoint = ""  # Set to your PagerDuty HTTPS endpoint if using PD
